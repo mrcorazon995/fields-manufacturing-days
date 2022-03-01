@@ -1,0 +1,35 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="mrp_priduction_manufacturing_days_inh">
+        <field name="name">mrp_priduction_manufacturing_days_inh</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_id']" position="after">
+                <field name="create_date"/>
+                <field name="date_finished"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="natural_days"/>
+                <field name="business_days"/>
+                <field name="entry_week"/>
+                <field name="departure_week"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ir_cron_update_manufacturing_days" model="ir.cron">
+        <field name="name">Automatic update manufacturing days</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="state">code</field>
+        <field name="code">env['mrp.production']._automated_days_manufacturing()</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="interval_number">1</field> 
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 22:00:00')"/>
+    </record>
+
+  </data>
+</odoo>
